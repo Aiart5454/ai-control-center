@@ -4,15 +4,27 @@ The current milestone is intentionally read-only.
 
 ## Local development
 
+Do not install dependencies with the system `pip`. Ubuntu protects the system Python via PEP 668.
+
+From the repository root:
+
 ```bash
-cd server
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e '.[dev]'
-uvicorn app.main:app --host 127.0.0.1 --port 9000
+bash scripts/bootstrap-local.sh
+bash scripts/run-local.sh
 ```
 
-Then open:
+The bootstrap creates `server/.venv`, installs dependencies only there, and runs tests.
+The run script always invokes uvicorn through that virtual environment, so it cannot accidentally use `/usr/bin/uvicorn`.
+
+If Ubuntu reports that venv support is missing, install it once:
+
+```bash
+sudo apt install python3-venv
+```
+
+Then rerun `bash scripts/bootstrap-local.sh`.
+
+Open:
 
 - `http://127.0.0.1:9000/api/v1/health`
 - `http://127.0.0.1:9000/api/v1/system`
