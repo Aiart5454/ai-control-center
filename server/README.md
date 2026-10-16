@@ -28,11 +28,22 @@ The API reads:
 - mounted disk usage;
 - temperature sensors exposed by Linux/psutil;
 - local IPv4 and Tailscale IPv4;
-- AMD/Linux DRM GPU busy/VRAM counters when exposed in `/sys/class/drm`.
+- AMD/Linux DRM GPU busy/VRAM counters when exposed in `/sys/class/drm`;
+- llama.cpp model registry from `127.0.0.1:8080/v1/models`.
 
 Unavailable hardware fields are returned as empty/null rather than invented values.
 
 `external_ip` is intentionally `null` in this stage because discovering it requires an outbound request to a third-party service. That can be enabled later as an explicit opt-in.
+
+## Verified EVO-X2 mappings
+
+Read-only diagnostics on the target host identified:
+
+- system service: `llama-server.service`
+- user service: `hermes-gateway.service`
+- llama.cpp API: `http://127.0.0.1:8080/v1/models`
+
+Open WebUI and ComfyUI systemd units have not yet been verified, so their configured IDs remain placeholders and will report unavailable until a real unit is found.
 
 ## Important
 
