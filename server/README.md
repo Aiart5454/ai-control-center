@@ -15,8 +15,24 @@ uvicorn app.main:app --host 127.0.0.1 --port 9000
 Then open:
 
 - `http://127.0.0.1:9000/api/v1/health`
+- `http://127.0.0.1:9000/api/v1/system`
 - `http://127.0.0.1:9000/api/v1/status`
 - `http://127.0.0.1:9000/docs`
+
+## Telemetry
+
+The API reads:
+
+- CPU load;
+- RAM usage;
+- mounted disk usage;
+- temperature sensors exposed by Linux/psutil;
+- local IPv4 and Tailscale IPv4;
+- AMD/Linux DRM GPU busy/VRAM counters when exposed in `/sys/class/drm`.
+
+Unavailable hardware fields are returned as empty/null rather than invented values.
+
+`external_ip` is intentionally `null` in this stage because discovering it requires an outbound request to a third-party service. That can be enabled later as an explicit opt-in.
 
 ## Important
 
