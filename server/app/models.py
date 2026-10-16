@@ -26,12 +26,35 @@ class DiskInfo(BaseModel):
     percent: float
 
 
+class TemperatureSensor(BaseModel):
+    label: str
+    current_c: float
+    high_c: float | None = None
+    critical_c: float | None = None
+
+
+class NetworkInfo(BaseModel):
+    local_ipv4: list[str]
+    tailscale_ipv4: list[str]
+    external_ip: str | None = None
+
+
+class GpuInfo(BaseModel):
+    id: str
+    busy_percent: float | None = None
+    vram_used_bytes: int | None = None
+    vram_total_bytes: int | None = None
+
+
 class SystemInfo(BaseModel):
     hostname: str
     uptime_seconds: float
     cpu_percent: float
     memory: MemoryInfo
     disks: list[DiskInfo]
+    temperatures: list[TemperatureSensor]
+    network: NetworkInfo
+    gpus: list[GpuInfo]
 
 
 class ServiceState(BaseModel):
