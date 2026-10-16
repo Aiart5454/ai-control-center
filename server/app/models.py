@@ -46,6 +46,12 @@ class GpuInfo(BaseModel):
     vram_total_bytes: int | None = None
 
 
+class ModelRuntime(BaseModel):
+    id: str
+    state: str
+    context_length: int | None = None
+
+
 class SystemInfo(BaseModel):
     hostname: str
     uptime_seconds: float
@@ -60,6 +66,8 @@ class SystemInfo(BaseModel):
 class ServiceState(BaseModel):
     id: str
     display_name: str
+    scope: Literal["system", "user"]
+    unit: str
     state: Literal["running", "stopped", "failed", "unknown", "unavailable"]
 
 
@@ -67,3 +75,4 @@ class StatusResponse(BaseModel):
     mode: Mode
     system: SystemInfo
     services: list[ServiceState]
+    models: list[ModelRuntime]
