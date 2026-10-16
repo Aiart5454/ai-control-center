@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 
 from .models import HealthResponse, StatusResponse, SystemInfo
-from .services import list_services
+from .services import list_models, list_services
 from .telemetry import get_system_info
 
 app = FastAPI(
     title="AI Control Center",
-    version="0.2.0",
+    version="0.3.0",
     docs_url="/docs",
     redoc_url=None,
 )
@@ -14,7 +14,7 @@ app = FastAPI(
 
 @app.get("/api/v1/health", response_model=HealthResponse)
 def health() -> HealthResponse:
-    return HealthResponse(ok=True, version="0.2.0")
+    return HealthResponse(ok=True, version="0.3.0")
 
 
 @app.get("/api/v1/system", response_model=SystemInfo)
@@ -24,10 +24,16 @@ def system_info() -> SystemInfo:
 
 @app.get("/api/v1/status", response_model=StatusResponse)
 def status() -> StatusResponse:
-    # Until the mode controller is enabled, report idle rather than pretending
-    # that a specific workload is active.
+    services = list_services()
+    models = list_models()
+
+    hermes_running = any(item.id == "hermes" and item.state == "running" for item in services)
+    loaded_models = [item for item in models if item.state == "loaded"]
+    mode = "agent" if hermes_running and loaded_models else "idle"
+
     return StatusResponse(
-        mode="idle",
+        mode=mode,
         system=get_system_info(),
-        services=list_services(),
+        services=services,
+        models=models,
     )
